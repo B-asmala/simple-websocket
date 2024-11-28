@@ -1,0 +1,97 @@
+body {
+    margin: 0;
+    font-family: monospace;
+    background-color: rgb(47, 45, 58);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    width: 100%;    
+    margin-top: 50px;
+    
+    
+    
+}
+
+h1{
+    width: fit-content;
+    color: rgb(165, 163, 203);
+    font-size: 22pt;
+
+    margin: auto;
+}
+
+form {
+    width: 400px;
+    max-width: 100%;
+    margin: auto;
+    font-size: 14pt;
+    margin-bottom: 50px;
+}
+
+.input-field {
+    margin: auto;
+    font-size: 14pt;
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid rgb(149, 149, 149);
+    font-family:'Courier New', monosapce;
+    background-color: rgb(47, 45, 58);
+    color: white;
+    margin: 5px;
+    
+}
+.input-field:focus {
+    outline: none;
+    
+    border-bottom: 2px solid rgb(104, 97, 148);
+
+}
+
+
+
+.input-field:active  {
+    border: none;
+    border-bottom: 1px solid rgb(149, 149, 149);
+
+}
+
+#submit-button {
+    width: 100%;
+    padding: 5px;
+    font-size: 16pt;
+    background-color: rgb(165, 163, 203);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-family:    monospace;
+}
+
+#submit-button:hover {
+    background-color: rgb(117, 116, 145);
+}
+
+#members {
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    flex-direction: row;
+    justify-content: center;
+    padding: 20px;
+}
+
+.member {
+    width: 300px;
+    max-width: 100%;
+    height: 300px;
+    background-color:rgb(62, 59, 76) ; 
+    border-radius: 15px;
+    padding: 10px;
+    font-size: 14pt;
+}
+
+#empty {
+    width: 100%;
+    text-align: center;
+    font-size: 14pt;
+}
