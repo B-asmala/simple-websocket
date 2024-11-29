@@ -4,13 +4,130 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task Manager</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎯</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>☁️</text></svg>">
+
+    <style>
+        body {
+        margin: 0;
+        font-family: monospace;
+        background-color: rgb(47, 45, 58);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        width: 100%;    
+        margin-top: 50px;
+        
+        
+        
+    }
+
+    h1{
+        width: fit-content;
+        color: rgb(165, 163, 203);
+        font-size: 22pt;
+
+        margin: auto;
+    }
+
+    form {
+        width: 400px;
+        max-width: 100%;
+        margin: auto;
+        font-size: 14pt;
+        margin-bottom: 50px;
+    }
+
+    .input-field {
+        margin: auto;
+        font-size: 14pt;
+        width: 100%;
+        border: none;
+        border-bottom: 2px solid rgb(149, 149, 149);
+        font-family:'Courier New', monosapce;
+        background-color: rgb(47, 45, 58);
+        color: white;
+        margin: 5px;
+        
+    }
+    .input-field:focus {
+        outline: none;
+        
+        border-bottom: 2px solid rgb(104, 97, 148);
+
+    }
+
+
+
+    .input-field:active  {
+        border: none;
+        border-bottom: 1px solid rgb(149, 149, 149);
+
+    }
+
+    #submit-button {
+        width: 100%;
+        padding: 5px;
+        font-size: 16pt;
+        background-color: rgb(165, 163, 203);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-family:    monospace;
+    }
+
+    #submit-button:hover {
+        background-color: rgb(117, 116, 145);
+    }
+
+    #tasks {
+
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        flex-direction: row;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .task {
+        width: 300px;
+        max-width: 100%;
+        height: 300px;
+        background-color:rgb(62, 59, 76) ; 
+        border-radius: 15px;
+        padding-left: 25px;
+        padding-right: 25px;
+        font-size: 14pt;
+    }
+
+    #empty {
+        width: 100%;
+        text-align: center;
+        font-size: 14pt;
+    }
+
+    footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background-color: rgb(32, 31, 40);
+        color: white;
+        text-align: center;
+        padding: 2px;
+        font-size: 12pt;
+    }
+
+    #link {
+        text-decoration: none;
+        color: white;
+    }
+
+    </style>
 </head>
 <body>
-    <h1>New Task!</h1>
+    <h1>New Task?</h1>
     <br>
-    <form action="/submit" method="POST">
+    <form id="task-form" action="/submit" method="POST">
         <label for="title">Title</label><br>
         <input type="text" id="title" name="Title" class="input-field" required><br><br>
 
@@ -30,6 +147,91 @@
         </div>
         
     </section>
+    <footer>by <a href="https://www.linkedin.com/in/basmala-abdelhakim-714b84222/" target="_blank" id="link"> basmala</a></footer>
+
 
 </body>
+
+
+<script>
+    //establish the socket
+    let taskNum = 0;
+    const socket = new WebSocket('ws://localhost:3000');
+    const taskContainer = document.getElementById("tasks");
+    
+
+    socket.onopen = () => {
+      console.log('Connected to WebSocket server');
+    };
+
+    socket.onmessage = (event) => {
+        const message = JSON.parse(event.data);
+        
+        if(message.data){
+            if(taskNum == 0){
+                taskNum ++;
+                taskContainer.innerHTML = "";
+            }
+
+            for (let task of message.data) {
+                //create HTML component
+                let taskDiv = document.createElement("div");
+                taskDiv.classList.add("task");
+
+                let h3 = document.createElement("h3");
+                console.log(task);
+                h3.innerHTML = task.title;
+
+                taskDiv.appendChild(h3);
+
+                let div = document.createElement("div");
+                div.innerHTML = task.deadline;
+                taskDiv.appendChild(div);
+
+                taskDiv.appendChild(document.createElement("br"));
+
+                div = document.createElement("div");
+                div.innerHTML = task.description;
+                taskDiv.appendChild(div);
+
+                taskContainer.appendChild(taskDiv);
+            }
+
+
+        }else{
+            console.log(message.message);
+        }
+    };
+
+
+    //handle form submission
+    document.getElementById('task-form').onsubmit = (event) => {
+            event.preventDefault(); // Prevent the form from submitting the traditional way
+
+            // Get the message input value
+            const title = document.getElementById('title').value;
+            const deadline = document.getElementById('deadline').value;
+            const description = document.getElementById('description').value;
+
+            const message = {
+                title,
+                deadline,
+                description
+            }
+
+
+
+        
+            // Send the message over WebSocket
+            socket.send(JSON.stringify(message));
+
+            // Clear the input field after sending the message
+            document.getElementById('title').value = '';
+            document.getElementById('deadline').value = '';
+            document.getElementById('description').value = '';
+        
+        };
+
+
+</script>
 </html>
